@@ -1,20 +1,27 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import {useUser} from "@thirdweb-dev/react/solana";
-import type { NextPage } from "next";
 import Link from "next/link";
-import React from 'react';
 import { dropCollectionMetadata } from "../const/dropList";
 import styles from "../styles/Home.module.css";
 import {Col, Row, Space } from 'antd'
 import CollectionCard from '../components/CollectionCard'
 import 'antd/dist/antd.css';
+import React, { FC, useEffect, useState } from "react";
+import { useRouter } from 'next/router'
+import type { NextPage } from "next";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
+import type { GetServerSideProps } from "next";
+import { getUser } from "../auth.config";
+import { programAddress } from "../const/yourDetails";
 
 const Home: NextPage = () => {
+  const router = useRouter()
+  const { contractAddress } = router.query
   const { user, isLoading: userLoading } = useUser();
   if (userLoading) return <></>;
-  const type = ["image", "video", "gif"]
+  
   return (
-    <div className={styles.container} >
+    <Col className={styles.container} >
       <Row gutter={[24, 24]}>
         <Col span={24} style={{ borderStyle: "outset" }}>
           <Row gutter={[24, 24]}>
@@ -33,9 +40,8 @@ const Home: NextPage = () => {
           </Row>
         </Col>
         <Col span={24} style={{ textAlign: 'center', padding: "80px" }}>
-          <h3 style={{ justifyContent: "space-between", display: "flex", flexWrap: "wrap" }}>
-            <span _ngcontent-rud-c55="">Image</span>
-            <a href="/">view all »</a>
+          <h3 style={{ justifyContent: "center", display: "flex", flexWrap: "wrap" }}>
+            <span _ngcontent-rud-c55=""></span>
           </h3>
           <Space direction="horizontal" size={100} style={{ display: 'flex' }}>
             {dropCollectionMetadata["image"]?.map((data: any, i: any) => {
@@ -72,8 +78,40 @@ const Home: NextPage = () => {
         </Col>
         
       </Row>
-    </div>
+    </Col>
   );
 };
 
 export default Home;
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const sdk = ThirdwebSDK.fromNetwork("devnet");
+
+  const user = await getUser(req);
+  console.log(user)
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const program = await sdk.getNFTDrop(programAddress);
+  const nfts = await program?.getAllClaimed();
+
+  // const hasNFT = nfts?.some((nft) => nft.owner === user.address);
+  const hasNFT = true
+  if (!hasNFT) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

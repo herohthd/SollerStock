@@ -1,0 +1,16 @@
+{
+    "name": "NFT Drop Eyes#1",
+    "symbol": "EYE",
+    "description": "The boy cuts vegetables while his father cooks food in the kitchen. Father and son preparing food at the kitchen.",
+    "image": "https://joko.mypinata.cloud/ipfs/QmbLW8RbfgnxK9VK6Jzz9EYhXSxo4L5q4G3hxvszBZ3TDo/0.png",
+    "external_url": "https://joko.mypinata.cloud/ipfs/QmentVwxrdaipxZQGkexQteej3ivoAozQ3vgN1jhEmTrjv",
+    "properties": {
+      "category": "image",
+      "creators": [
+        {
+          "address": "2VAjw45MG1PJ3whS6oUDga4mXYZaxmExqoQfuy5MEUiQ",
+          "share": 100
+        }
+      ]
+    }
+}
